@@ -71,7 +71,7 @@ def pushDirection(var pipe : Pipe; prev : PipePoint3D)
 
     var newpos = prev.pos
     var newdir = prev.dir
-    let quat = un_quat_from_unit_vec_ang(random_unit_vector(seed4), 0.3)
+    let quat = un_quat_from_unit_vec_ang(random_unit_vector(seed4), 0.5)
     let dir = quat_mul_vec(quat, prev.dir)
     let up = quat_mul_vec(quat, prev.up)
     let uv = prev.texcoord + float(texture_size)
@@ -97,7 +97,7 @@ def updateDirections(var pipe)
 def pipe_initialize()
     var pipe : Pipe
     randomize_seed(seed4)
-    pipe.texture <- create_image("res/fire.jpg") 
+    pipe.texture <- create_image("res/fire.jpg")
     emplace(pipe.points, [[PipePoint3D dir = float3(0,0,1), up = float3(0,1,0)]])
     generateVertexes(back(pipe.points))
     updateDirections(pipe)
@@ -105,7 +105,7 @@ def pipe_initialize()
 
 
 def pipe_act(var pipe : Pipe; dt : float)
-    pipe.currentPos += dt * 5.0
+    pipe.currentPos += dt * 25.0
     if (int(pipe.currentPos) > 1)
         erase(pipe.points, 0)
         pipe.currentPos -= 1.0
@@ -120,9 +120,6 @@ struct PipeVervex2D
 
 struct PipePoint2D
     vertexes : PipeVervex2D[num_radius_segments]
-
-def line(p1, p2; color)
-    line(p1.x, p1.y, p2.x, p2.y, color)
 
 def drawTriangle(pipe : Pipe; points : array<PipePoint2D>; camera : Camera; a, b, c : int2)
     //debug_out("{points[1]}")
@@ -159,7 +156,7 @@ def pipe_draw(var pipe : Pipe; camera : Camera)
     var i = 0
     for point in pipe.points
         for j in range(0, num_radius_segments)
-            points[i].vertexes[j].color = make_color(max(0.2, dot(point.vertexes[j].normal, directLigth)))
+            points[i].vertexes[j].color = make_color(0.3 + max(0.0, dot(point.vertexes[j].normal, directLigth)))
             //debug_out("{point.vertexes[j].pos}   =>   {transformed} ")
             points[i].vertexes[j].pos = camera_transform(camera, point.vertexes[j].pos).xyz
         ++i

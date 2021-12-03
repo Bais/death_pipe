@@ -9,6 +9,9 @@ def interpolate(p0, p1, p2, p3; t : float)
     
     return ti3 * p0 + 3.0 * t * ti2 * p1 + 3.0 * t2 * ti * p2 + t3 * p3
 
+def line(p1, p2; color)
+    line(p1.x, p1.y, p2.x, p2.y, color)
+
 def rotateDir(quat : float4; dir : float3)
     let inv = quat_conjugate(quat)
     return quat_mul(quat_mul(quat, float4(dir, 0.0)), inv).xyz

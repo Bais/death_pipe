@@ -42,16 +42,14 @@ def camera_init(var camera : Camera; pos, dir, up: float3)
 
 
 def camera_draw(var camera : Camera)
-    //camera.viewMatrix = look_at(float4(camera.pos, 0.0), float4(camera.pos + camera.dir, 0.0), float4(camera.up, 0.0))
-    camera.viewMatrix = look_at_lh(camera.pos, camera.pos + camera.dir  * 1.0, camera.up * 1.0)
+    camera.viewMatrix = look_at(float4(camera.pos, 0.0), float4(camera.pos + camera.dir, 0.0), float4(camera.up, 0.0))
     camera.projMatrix = persp_forward(
       0.4,// * float(get_screen_height()),// * float(get_screen_height()) /20.0,
       0.4,// * float(get_screen_height()),// * float(get_screen_width()) / 20.0,
       0.1,
       10000.0)
 
-    debug_out("Camera {camera.pos}  {camera.dir} {camera.up}")
-    debug_out("view {camera.viewMatrix}")
+    debug_out("Camera {camera.pos}  {camera.dir} {camera.up}")   
 
 
 def camera_transform(camera : Camera; point : float3)

@@ -4,6 +4,7 @@ require daslib/media
 require pipe
 require debugOut
 require camera
+require space
 
 
 var
@@ -14,6 +15,7 @@ var
 [export]
 def initialize
     pipe <- pipe_initialize()
+    space_init()
     set_window_title("death_pipe")
     return
 
@@ -35,5 +37,5 @@ def draw
     debug_out_start()
     setUpCamera(pipe, camera)
     camera_draw(camera)
+    render_space(camera)
     pipe_draw(pipe, camera)
-    return
