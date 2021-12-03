@@ -35,7 +35,7 @@ let texture_size = 1000
 let directLigth = normalize(float3(1, 1, 0))
 
 def pipe_move_user(var pipe : Pipe; dt : float)
-    pipe.currentAngle += dt * 0.5
+    pipe.currentAngle += dt * 10.0
 
 def setUpCamera(var pipe : Pipe; var camera : Camera)
     let ipos = int(pipe.currentPos)

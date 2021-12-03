@@ -26,7 +26,18 @@ def act(dt: float)
     if get_key(VK_ESCAPE)
         schedule_quit_game()
 
-    pipe_move_user(pipe, float(get_mouse_position_delta().x) * dt)
+    var delta = get_mouse_position().x - float(get_screen_width()) * 0.5
+    let threshold = 5.0
+    if delta > threshold
+        delta -= threshold
+    elif delta < -threshold
+        delta += threshold
+    else
+        delta = 0.0
+    
+    delta /= float(get_screen_width())
+
+    pipe_move_user(pipe, delta * dt)
 
     pipe_act(pipe, dt)
 
@@ -39,3 +50,4 @@ def draw
     camera_draw(camera)
     render_space(camera)
     pipe_draw(pipe, camera)
+    debug_out("{get_mouse_position()}")
