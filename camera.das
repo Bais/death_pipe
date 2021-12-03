@@ -42,17 +42,22 @@ def camera_init(var camera : Camera; pos, dir, up: float3)
 
 
 def camera_draw(var camera : Camera)
-    camera.viewMatrix = look_at(float4(camera.pos + camera.dir, 0.0), float4(camera.pos, 0.0), float4(camera.up, 0.0))
-    //camera.viewMatrix = look_at_lh(camera.dir + camera.pos, camera.pos, camera.up)
+    //camera.viewMatrix = look_at(float4(camera.pos, 0.0), float4(camera.pos + camera.dir, 0.0), float4(camera.up, 0.0))
+    camera.viewMatrix = look_at_lh(camera.pos, camera.pos + camera.dir  * 1.0, camera.up * 1.0)
     camera.projMatrix = persp_forward(
-      100.0,// * float(get_screen_height()) /20.0,
-      100.0,// * float(get_screen_width()) / 20.0,
-      1.0,
-      100000.0)
+      0.4,// * float(get_screen_height()),// * float(get_screen_height()) /20.0,
+      0.4,// * float(get_screen_height()),// * float(get_screen_width()) / 20.0,
+      0.1,
+      10000.0)
 
-    debug_out("Camera {camera.pos}  {camera.dir} {camera.up}  \n")
+    debug_out("Camera {camera.pos}  {camera.dir} {camera.up}")
+    debug_out("view {camera.viewMatrix}")
 
 
 def camera_transform(camera : Camera; point : float3)
-    //return camera.viewMatrix * float4(point, 0.0)
-    return camera.projMatrix * ( camera.viewMatrix * float4(point, 0.0) )
+    var res = camera.projMatrix * ( camera.viewMatrix * float4(point, 1.0) )
+    res.x *= float(get_screen_height()) / res.z
+    res.y *= -1.0 * float(get_screen_height()) / res.z
+    res.x += float(get_screen_width()) * 0.5
+    res.y += float(get_screen_height()) * 0.5
+    return res
