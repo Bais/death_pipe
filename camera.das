@@ -49,7 +49,7 @@ def camera_draw(var camera : Camera)
       0.1,
       10000.0)
 
-    debug_out("Camera {camera.pos}  {camera.dir} {camera.up}")   
+    //debug_out("Camera {camera.pos}  {camera.dir} {camera.up}")   
 
 
 def camera_transform(camera : Camera; point : float3)
