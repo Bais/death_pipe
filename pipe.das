@@ -9,7 +9,7 @@ struct PipeVervex3D
     textcoord : float2
 
 struct PipePoint3D
-    vertexes : PipeVervex3D[num_radius_segments]
+    vertexes : PipeVervex3D[num_radius_segments + 1]
     pos : float3
     dir : float3
     up : float3
@@ -59,10 +59,15 @@ def generateVertexes(var point : PipePoint3D)
         norm = quat_mul_vec(quat, norm)
         point.vertexes[i].pos = point.pos + norm * radius
         point.vertexes[i].normal = norm
-        point.vertexes[i].textcoord = float2(float(i * texture_size)/float(num_radius_segments - 1), point.texcoord)
+        point.vertexes[i].textcoord = float2(float(i * texture_size)/float(num_radius_segments), point.texcoord)
         // point.vertexes[i].textcoord = float2(float(i * texture_size)/float(num_radius_segments - 1),
         //     float(point.index % 2 * texture_size))
         //print("{point.index} {point.vertexes[i].textcoord} \n")
+    
+    point.vertexes[num_radius_segments] = point.vertexes[0]
+    point.vertexes[num_radius_segments].textcoord = float2(float(texture_size), point.texcoord)
+    for i in range(0, num_radius_segments + 1)
+        print("{point.vertexes[i].textcoord} \n")
 
 let pipe_segments = 50
 
@@ -105,7 +110,7 @@ def pipe_initialize()
 
 
 def pipe_act(var pipe : Pipe; dt : float)
-    pipe.currentPos += dt * 25.0
+    pipe.currentPos += dt * 1.0
     if (int(pipe.currentPos) > 1)
         erase(pipe.points, 0)
         pipe.currentPos -= 1.0
@@ -119,7 +124,7 @@ struct PipeVervex2D
     color : uint
 
 struct PipePoint2D
-    vertexes : PipeVervex2D[num_radius_segments]
+    vertexes : PipeVervex2D[num_radius_segments + 1]
 
 def drawTriangle(pipe : Pipe; points : array<PipePoint2D>; camera : Camera; a, b, c : int2)
     //debug_out("{points[1]}")
@@ -155,7 +160,7 @@ def pipe_draw(var pipe : Pipe; camera : Camera)
     
     var i = 0
     for point in pipe.points
-        for j in range(0, num_radius_segments)
+        for j in range(0, num_radius_segments + 1)
             points[i].vertexes[j].color = make_color(0.3 + max(0.0, dot(point.vertexes[j].normal, directLigth)))
             //debug_out("{point.vertexes[j].pos}   =>   {transformed} ")
             points[i].vertexes[j].pos = camera_transform(camera, point.vertexes[j].pos).xyz
@@ -165,7 +170,8 @@ def pipe_draw(var pipe : Pipe; camera : Camera)
     i = numPoints - 2
     while i >= max(0, int(pipe.currentPos) - 1)
         for j in range(0, num_radius_segments)
-            let j2 = j == num_radius_segments - 1 ? 0 : j + 1
+            //let j2 = j == num_radius_segments - 1 ? 0 : j + 1
+            let j2 = j + 1
             drawTriangle(pipe, points, camera, int2(i, j), int2(i, j2), int2(i + 1, j ))
             drawTriangle(pipe, points, camera, int2(i + 1, j), int2(i, j2), int2(i + 1, j2))
         --i
