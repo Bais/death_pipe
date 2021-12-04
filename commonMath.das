@@ -18,5 +18,5 @@ def rotateDir(quat : float4; dir : float3)
 
 let directLigth = normalize(float3(1, 1, 1))
 
-def calc_light(norm : float3)
-    return make_color(0.3 + max(0.0, dot(norm, directLigth)) * 0.7)
+def calc_light(norm : float3; amb : float = 0.4 )
+    return make_color(amb + max(0.0, dot(norm, directLigth)) * (1.0 - amb))
