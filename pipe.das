@@ -43,7 +43,7 @@ def check_collision(pipe : Pipe)
         return false
     
     let obstAngle = float(obstInd) / float(num_radius_segments)
-    return abs(obstAngle - pipe.currentAngle / (2.0 * PI)) < 3.0 / float(num_radius_segments)
+    return abs(obstAngle - pipe.currentAngle / (2.0 * PI)) < 1.0 / float(num_radius_segments)
 
 def pipe_move_user(var pipe : Pipe; dt : float)
     pipe.currentAngle += dt * 10.0
@@ -131,7 +131,7 @@ def pipe_initialize()
 
 
 def pipe_act(var pipe : Pipe; dt : float)
-    pipe.currentPos += dt * 15.0
+    pipe.currentPos += dt * 10.0
     if (int(pipe.currentPos) >= pipe_segments)        
         erase(pipe.sections, 0)
         pipe.currentPos -= float(pipe_segments)
@@ -173,7 +173,7 @@ def draw_obstacle(pipe: Pipe; point: PipePoint3D; camera : Camera)
     let up = normalize(point.vertexes[point.obstacle].pos - point.pos) * 20.0
     let pos1 = point.obstacle == 0 ? point.vertexes[num_radius_segments - 2].pos : point.vertexes[point.obstacle - 1].pos
     let pos2 = point.vertexes[point.obstacle + 1].pos
-    draw_quad_3d(camera, pipe.obstacle, pos1, pos1 + up, pos2 + up, pos2, calc_light(-point.dir))
+    draw_quad_3d(camera, pipe.obstacle, pos1, pos1 + up, pos2 + up, pos2, calc_light(-point.dir, 0.6))
 
 
 def pipe_draw_section(var pipe : Pipe; section :Section; camera : Camera; var points : array<PipePoint2D>; index : int)
@@ -187,12 +187,13 @@ def pipe_draw_section(var pipe : Pipe; section :Section; camera : Camera; var po
     i = numPoints - 2
     let limit = index == 0 ? int(pipe.currentPos) + 1 : 0
     while i >= limit
-        draw_obstacle(pipe, section.points[i], camera)
         for j in range(0, num_radius_segments)
             //let j2 = j == num_radius_segments - 1 ? 0 : j + 1
             let j2 = j + 1
             drawTriangle(pipe, section.points, points, camera, int2(i, j), int2(i, j2), int2(i + 1, j ))
             drawTriangle(pipe, section.points, points, camera, int2(i + 1, j), int2(i, j2), int2(i + 1, j2))
+
+        draw_obstacle(pipe, section.points[i], camera)
         --i
 
 def pipe_draw(var pipe : Pipe; camera : Camera)
