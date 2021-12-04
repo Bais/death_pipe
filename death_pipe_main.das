@@ -10,6 +10,7 @@ require space
 var
     pipe : Pipe
     camera : Camera
+    gameOver : bool
 
 // 'initialize' runs once when game starts and every hot-reload
 [export]
@@ -37,9 +38,14 @@ def act(dt: float)
     
     delta /= float(get_screen_width())
 
-    pipe_move_user(pipe, delta * dt)
+    if !gameOver
+        pipe_move_user(pipe, delta * dt)
 
     pipe_act(pipe, dt)
+
+    if !gameOver && check_collision(pipe)
+        gameOver = true
+
 
 // this function will be called every frame after 'act',
 // you can draw anything in this function

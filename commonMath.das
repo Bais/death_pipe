@@ -15,3 +15,8 @@ def line(p1, p2; color)
 def rotateDir(quat : float4; dir : float3)
     let inv = quat_conjugate(quat)
     return quat_mul(quat_mul(quat, float4(dir, 0.0)), inv).xyz
+
+let directLigth = normalize(float3(1, 1, 1))
+
+def calc_light(norm : float3)
+    return make_color(0.3 + max(0.0, dot(norm, directLigth)) * 0.7)

@@ -59,3 +59,23 @@ def camera_transform(camera : Camera; point : float3)
     res.x += float(get_screen_width()) * 0.5
     res.y += float(get_screen_height()) * 0.5
     return res
+
+
+def draw_quad_3d(camera : Camera; texture : Image; p0, p1, p2, p3 : float3; color : uint)
+    let p0t = camera_transform(camera, p0)
+    if p0t.z < 0.0
+        return
+    
+    let p1t = camera_transform(camera, p1)
+    if p1t.z < 0.0
+        return
+
+    let p2t = camera_transform(camera, p2)
+    if p2t.z < 0.0
+        return
+    
+    let p3t = camera_transform(camera, p3)
+    if p3t.z < 0.0
+        return
+    
+    draw_quad(texture, p0t.xy, p1t.xy, p2t.xy, p3t.xy, color)
